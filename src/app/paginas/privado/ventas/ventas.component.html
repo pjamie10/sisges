@@ -1,0 +1,116 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-rose card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">local_grocery_store</i>
+            </div>
+            <div class="card-title h3">Gestión de Ventas</div>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="frmBusqueda">
+              <div class="row">
+                <div class="col-md-2">
+                  <mat-form-field>
+                    <mat-label>Desde</mat-label>
+                    <input type="date" matInput formControlName="VentaFechaInicio" [value]="fechaActual">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-2">
+                  <mat-form-field>
+                    <mat-label>Hasta</mat-label>
+                    <input type="date" matInput formControlName="VentaFechaFin" [value]="fechaActual">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field class="control-full-width">
+                    <mat-label>Buscar</mat-label>
+                    <input matInput id="txtBuscar" formControlName="VentaParametro">
+                    <mat-icon matPrefix>search</mat-icon>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-1">
+                  <button mat-mini-fab color="primary" (click)="listarVentas()">
+                    <mat-icon>search</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-12">
+                  <button mat-fab color="warn" (click)="nuevaVenta()" class="derecha">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </form>
+            <div class="row">
+              <div class="col-md-12" *ngIf="lstVentas.length>0">
+                <button mat-mini-fab color="accent" aria-label="Descargar" (click)="descargarReporte()">
+                  <mat-icon>download_for_offline</mat-icon>
+                </button>
+              </div>
+              <div class="col-md-12">
+                <div class="material-datatables">
+                  <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th class="encabezado-tabla">SEC</th>
+                        <th class="encabezado-tabla">FECHA</th>
+                        <th class="encabezado-tabla">COMPROBANTE</th>
+                        <th class="encabezado-tabla">SERIE - NÚMERO</th>
+                        <th class="encabezado-tabla">CATEGORIA</th>
+                        <th class="encabezado-tabla">MODALIDAD</th>
+                        <th class="encabezado-tabla">CLIENTE</th>
+                        <th class="encabezado-tabla">ASESOR</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let objVenta of lstVentas; let indice = index">
+                        <tr>
+                          <td>{{indice+1}}</td>
+                          <td>{{objVenta.VentaSEC}}</td>
+                          <td>{{objVenta.VentaFecha}}</td>
+                          <td>{{objVenta.TipoComprobante}}</td>
+                          <td>{{objVenta.ComprobanteSerie}}-{{objVenta.ComprobanteNumero}}</td>
+                          <td>{{objVenta.CategoriaNombre}}</td>
+                          <td>{{objVenta.ModalidadNombre}}</td>
+                          <td>{{objVenta.ClienteRazonSocial}}</td>
+                          <td>{{objVenta.Asesor}}</td>
+                          <td class="celda-derecha">
+                            <button class="btn btn-link color-secondary" title="Ver" matTooltip="Ver">
+                              <mat-icon>search</mat-icon>
+                            </button>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container *ngIf="lstVentas.length==0">
+                        <tr>
+                          <td colspan="10" class="text-danger text-center">
+                            NO SE ENCUENTRAN VENTAS REGISTRADAS
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="10">
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

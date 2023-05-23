@@ -1,0 +1,15 @@
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

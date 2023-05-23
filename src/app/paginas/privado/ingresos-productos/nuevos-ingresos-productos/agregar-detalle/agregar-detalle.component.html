@@ -1,0 +1,166 @@
+<mat-toolbar matDialogTitle class="m-0" color="warn">
+  <span mat-dialog-title>Agregar Detalle</span>
+  <span class="fill-remaining-space"></span>
+  <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-dialog-content class="pt-4 m-0">
+  <form [formGroup]="frmPrincipal">
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo de Producto</mat-label>
+          <mat-select formControlName="TipoProducto" (selectionChange)="seleccionarTipoProducto($event.value)">
+            <mat-option *ngFor="let objTipoProducto of lstTipoProducto" [value]="objTipoProducto.TipoProductoId">
+              {{objTipoProducto.TipoProductoDescripcion}}
+            </mat-option>
+          </mat-select>
+          <mat-error class="float-end" *ngIf="TipoProducto?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-8">
+        <!--<mat-form-field appearance="outline">
+          <mat-label>Producto</mat-label>
+          <mat-select formControlName="Producto" (selectionChange)="seleccionarProducto($event.value)">
+            <mat-option *ngFor="let objProducto of lstProducto" [value]="objProducto.ProductoId">
+              {{objProducto.ProductoNombre}}
+            </mat-option>
+          </mat-select>
+          <mat-error class="float-end" *ngIf="Producto?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>-->
+        <mat-form-field appearance="outline" fxFlex="100%" fxFlex.lg="100%" fxFlex.md="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+          <mat-label>Producto</mat-label>
+          <mat-select formControlName="Producto"  (selectionChange)="seleccionarProducto($event.value)">
+            <mat-select-filter [displayMember]="'ProductoNombre'"
+                               [noResultsMessage]="'No se encontraron registros'"
+                               [placeholder]="'Buscar un Producto'"
+                               [array]="lstProducto" (filteredReturn)="lstProductoFiltrado=$event">
+            </mat-select-filter>
+            <mat-option *ngFor="let objProducto of lstProductoFiltrado"
+                        [value]="objProducto.ProductoId">
+              {{objProducto.ProductoNombre}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="Producto?.invalid">
+            *Requerido
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+    </div>
+    <!--EQUIPOS CELULARES-->
+    <ng-container *ngIf="vTipoProductoId==1 && !Producto?.invalid">
+      <div class="row">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="control-full-width">
+            <mat-label>CANTIDAD</mat-label>
+            <input type="number" formControlName="cantidadIMEI" matInput (keydown.enter)="generarIMEI()" (blur)="generarIMEI()" maxlength="2">
+          </mat-form-field>
+        </div>
+      </div>
+      <ng-container *ngIf="vTotalIMEI>0">
+        <div class="row" *ngFor="let objIMEI of lstIMEI ; let indice=index">
+          <mat-form-field id="mf_{{indice}}" appearance="outline" class="control-full-width">
+            <mat-label>IMEI {{indice+1}}</mat-label>
+            <input matInput type="text" name="txtIMEI" (blur)="validarIMEI($event,indice)" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" required maxlength="15">
+            <span class="form-control-feedback" style="padding-bottom:20px">
+              <i class="material-icons" id="done_{{indice}}"> done</i>
+              <i class="material-icons" id="clear_{{indice}}">clear</i>
+            </span>
+          </mat-form-field>
+        </div>
+      </ng-container>
+    </ng-container>
+    <!--LECTOR BIOMÉTRICO-->
+    <ng-container *ngIf="vTipoProductoId==2 && !Producto?.invalid">
+      <div class="row">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="control-full-width">
+            <mat-label>CANTIDAD</mat-label>
+            <input type="number" formControlName="cantidadNmrSerie" matInput (keydown.enter)="generarNmrSerie()" maxlength="2">
+          </mat-form-field>
+        </div>
+      </div>
+      <ng-container *ngIf="vTotalNmrSerie>0">
+        <div class="row" *ngFor="let objNmrSerie of lstNmrSerie ; let indice=index">
+          <mat-form-field appearance="outline" class="control-full-width">
+            <mat-label>Número de Serie {{indice+1}}</mat-label>
+            <input name="txtNmrSerie" matInput>
+          </mat-form-field>
+        </div>
+      </ng-container>
+    </ng-container>
+    <!--CHIPS-->
+    <ng-container *ngIf="vTipoProductoId==3 && !Producto?.invalid">
+      <div class="row">
+        <div class="6">
+          <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group">
+            <mat-radio-button class="example-radio-button" (change)="seleccionado($event.value)" value="C">
+              Cantidad
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" (change)="seleccionado($event.value)" value="R">
+              Rango
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div *ngIf="seleccion=='C'">
+            <mat-form-field appearance="outline" class="control-full-width">
+              <mat-label>CANTIDAD</mat-label>
+              <input formControlName="cantidadChip" matInput (keydown.enter)="generarCantidadChip()" type="number" maxlength="2">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ng-container *ngIf="vTotalChip>0 && seleccion=='C'">
+            <div class="row" *ngFor="let objChip of lstChip ; let indice=index">
+              <div class="col-md-12">
+                <mat-label>Número de Chip {{indice+1}}</mat-label>
+                <mat-form-field class="control-full-width">
+                  <input name="txtChip" matInput maxlength="10" />
+                  <span matPrefix>89511016</span>
+                </mat-form-field>
+              </div>
+            </div>
+          </ng-container>
+          <div *ngIf="seleccion=='R'">
+            <div class="row">
+              <div class="col-md-6">
+                <mat-label>Desde</mat-label>
+                <mat-form-field>
+                  <input matInput formControlName="desde"  maxlength="10"/>
+                  <span matPrefix>89511016</span>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-label>Hasta</mat-label>
+                <mat-form-field>
+                  <input matInput formControlName="hasta" maxlength="10" />
+                  <span matPrefix>89511016</span>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-fab color="secondary" (click)="matDialogRef.close()" title="Salir">
+    <mat-icon>close</mat-icon>
+  </button>
+  <!--[disabled]="frmPrincipal.invalid"-->
+  <button mat-fab color="warn" (click)="guardarDatos()" title="Guardar Datos">
+    <mat-icon>save</mat-icon>
+  </button>
+</mat-dialog-actions>

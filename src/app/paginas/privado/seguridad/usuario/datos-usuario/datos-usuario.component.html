@@ -1,0 +1,197 @@
+<mat-toolbar matDialogTitle class="m-0" color="warn">
+  <span mat-dialog-title>{{titulo}}</span>
+  <span class="fill-remaining-space"></span>
+  <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-dialog-content class="pt-4 m-0">
+  <form [formGroup]="frmPrincipal">
+    <div class="row">
+      <div class="col-md-3">
+        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': TipoDocumento?.invalid && (TipoDocumento?.dirty || TipoDocumento?.touched),
+                      'has-success': TipoDocumento?.valid && (TipoDocumento?.dirty || TipoDocumento?.touched)}">
+          <mat-label>TIPO DE DOCUMENTO</mat-label>
+          <mat-select [(ngModel)]="tipoDocumentoIdentidad" formControlName="TipoDocumentoId" (selectionChange)="seleccionarTipoDocumentoIdentidad($event.value)">
+            <mat-option *ngFor="let objTipoDocumento of lstTipoDocumentoIdentidad" [value]="objTipoDocumento.ConjuntoDatoValor">
+              {{objTipoDocumento.ConjuntoDatoTexto}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngFor="let validacion of mensajesValidacion.TipoDocumento">
+            <mat-error class="error-message" *ngIf="frmPrincipal.get('TipoDocumento')?.hasError(validacion.type) && (frmPrincipal.get('TipoDocumento')?.dirty || frmPrincipal.get('TipoDocumento')?.touched)">{{validacion.message}}</mat-error>
+          </mat-error>
+          <span class="form-control-feedback">
+            <i class="material-icons" *ngIf="TipoDocumento?.valid && (TipoDocumento?.dirty || TipoDocumento?.touched)"><!--done--></i>
+            <i class="material-icons" *ngIf="TipoDocumento?.invalid && (TipoDocumento?.dirty || TipoDocumento?.touched)"><!--clear--></i>
+          </span>
+        </mat-form-field>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field class="control-full-width">
+          <mat-label>N° Documento</mat-label>
+          <input matInput type="text" formControlName="PersonaEmpresaNumeroDocumento" maxlength="{{numeroCaracteres}}">
+        </mat-form-field>
+        <mat-error class="float-end" *ngIf="PersonaEmpresaNumeroDocumento?.invalid">
+          *Obligatorio
+        </mat-error>
+      </div>
+      <div class="col-md-1">
+        <button mat-mini-fab color="primary" (click)="buscarPersonaPorTipoNumeroDocumento()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field class="control-full-width">
+          <mat-label>Nombre(s)</mat-label>
+          <input matInput type="text" readonly>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="control-full-width">
+          <mat-label>Apellido Paterno</mat-label>
+          <input matInput type="text" readonly>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="control-full-width">
+          <mat-label>Apellido Materno</mat-label>
+          <input  matInput type="text" readonly>
+        </mat-form-field>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field>
+          <mat-label>Fecha de Nacimiento</mat-label>
+          <input type="date" matInput formControlName="FechaNacimiento" readonly>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': Grupo?.invalid && (Grupo?.dirty || Grupo?.touched),
+                      'has-success': Grupo?.valid && (Grupo?.dirty || Grupo?.touched)}">
+          <mat-label>Grupo</mat-label>
+          <mat-select formControlName="Grupo">
+            <mat-option *ngFor="let objGrupo of lstGrupo" value="objGrupo.GrupoId">
+              {{objGrupo.GrupoDescripcion}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngFor="let validacion of mensajesValidacion.Grupo">
+            <mat-error class="error-message" *ngIf="frmPrincipal.get('Grupo')?.hasError(validacion.type) && (frmPrincipal.get('Grupo')?.dirty || frmPrincipal.get('Grupo')?.touched)">{{validacion.message}}</mat-error>
+          </mat-error>
+          <span class="form-control-feedback">
+            <i class="material-icons" *ngIf="Grupo?.valid && (Grupo?.dirty || Grupo?.touched)"><!--done--></i>
+            <i class="material-icons" *ngIf="Grupo?.invalid && (Grupo?.dirty || Grupo?.touched)"><!--clear--></i>
+          </span>
+        </mat-form-field>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': TipoDocumento?.invalid && (TipoDocumento?.dirty || TipoDocumento?.touched),
+                      'has-success': TipoDocumento?.valid && (TipoDocumento?.dirty || TipoDocumento?.touched)}">
+          <mat-label>Perfil</mat-label>
+          <mat-select formControlName="Perfil">
+            <mat-option *ngFor="let objPerfil of lstPerfil" value="objPerfil.PerfilId">
+              {{objPerfil.PerfilDescripcion}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-1">
+        <button mat-mini-fab color="primary" (click)="guardarPerfil()" title="Guardar Datos">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="control-full-width">
+          <div class="row">
+            <div class="col-md-10">
+              <mat-form-field formControlName="Login" class="control-full-width">
+                <mat-label>Login</mat-label>
+                <input matInput formControlName="Login" type="text">
+                <mat-error class="float-end" *ngIf="Login?.invalid">
+                  *Obligatorio
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <mat-form-field class="control-full-width">
+                <mat-label>Contraseña</mat-label>
+                <input matInput formControlName="Login" type="text">
+                <mat-error class="float-end" *ngIf="Login?.invalid">
+                  *Obligatorio
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <mat-form-field class="control-full-width">
+                <mat-label>Repetir Contraseña</mat-label>
+                <input matInput type="text">
+              </mat-form-field>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="control-full-width">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="col-md-12">
+                <div class="material-datatables" formControlName="PerfilDescripcion">
+                  <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                    <thead>
+                      <tr>
+                        <th class="encabezado-tabla perfil">DESCRIPCION DE PERFIL</th>
+                        <th class="encabezado-tabla acciones"></th>
+                      </tr>
+                    </thead>
+                    <tbody >
+                      <ng-container *ngFor="let objPerfil of lstPerfilAgregados; let indice = index">
+                        <tr>
+                          <td>
+                            <!--Estado-->
+                            {{objPerfil.PerfilDescripcion}}
+                            
+                          </td>
+                          <td class="celda-derecha">
+                            <button class="btn btn-link color-secondary" title="Eliminar" matTooltip="Eliminar" >
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="6">
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-fab color="secondary" (click)="matDialogRef.close()" title="Salir">
+    <mat-icon>close</mat-icon>
+  </button>
+  <button mat-fab color="warn" (click)="guardarDatos(frmPrincipal.value)" [disabled]="frmPrincipal.invalid" title="Guardar Datos">
+    <mat-icon>save</mat-icon>
+  </button>
+</mat-dialog-actions>

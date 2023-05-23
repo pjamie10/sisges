@@ -1,0 +1,117 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-rose card-header-icon">
+            <h4 class="card-title"></h4>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="frmPrincipal">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <mat-form-field>
+                        <mat-label>Tipo Comprobante</mat-label>
+                        <mat-select formControlName="TipoComprobanteId" [disabled]="true">
+                          <mat-option *ngFor="let objTipoComprobante of lstTipoComprobante" [value]="objTipoComprobante.ConjuntoDatoValor">
+                            {{objTipoComprobante.ConjuntoDatoTexto}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error class="float-end" *ngIf="TipoComprobanteId?.invalid">
+                          *Obligatorio
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-label>SERIE DE DOCUMENTO</mat-label>
+                      <input matInput type="text" formControlName="IngresoSerieComprobante" readonly>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-label>NÚMERO DE DOCUMENTO</mat-label>
+                      <input matInput type="text" formControlName="IngresoNroComprobante" readonly>
+                    </div>
+                    <div class="col-md-2">
+                      <mat-form-field class="control-full-width">
+                        <mat-label>FECHA DE INGRESO</mat-label>
+                        <input type="text" matInput formControlName="IngresoFecha" readonly>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <mat-label>Responsable de Recojo</mat-label>
+                        <mat-select formControlName="PersonaRecojoId" [disabled]="true">
+                          <mat-option *ngFor="let objUsuario of lstUsuario" [value]="objUsuario.PersonaEmpresaId">
+                            {{objUsuario.PersonaEmpresaNombre}} {{objUsuario.PersonaEmpresaApellidoPaterno}} {{objUsuario.PersonaEmpresaApellidoMaterno}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <br />
+            <div class="row">
+              <div class="col-md-12">
+                <div class="material-datatables">
+                  <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th class="encabezado-tabla">TIPO DE PRODUCTO</th>
+                        <th class="encabezado-tabla">CODIGO</th>
+                        <th class="encabezado-tabla">DESCRIPCION DE PRODUCTO</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let objProducto of lstProductosAgregados; let indice = index">
+                        <tr>
+                          <td>{{indice+1}}</td>
+                          <td>{{objProducto.TipoProductoDescripcion}}</td>
+                          <td>
+                            <ng-container *ngIf="objProducto.TipoChip=='R'">
+                              {{objProducto.Desde}} -  {{objProducto.Hasta}}
+                            </ng-container>
+                            <ng-container *ngIf="objProducto.TipoChip!='R'">
+                              {{objProducto.ProductoCodigo}}
+                            </ng-container>
+                          </td>
+                          <td>{{objProducto.ProductoNombre}}</td>
+                        </tr>
+                      </ng-container>
+                      <ng-container *ngIf="lstProductosAgregados.length==0">
+                        <tr>
+                          <td colspan="4" class="text-danger text-center">
+                            NO SE AGREGARON DETALLES
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="4">
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-1">
+                <button mat-fab color="warn" (click)="retroceder()" title="Retroceder">
+                  <mat-icon>arrow_back</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,186 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-rose card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">local_grocery_store</i>
+            </div>
+            <h4 class="card-title">Nuevo de Ingreso De Producto</h4>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="frmPrincipal">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <mat-form-field>
+                        <mat-label>Tipo Comprobante</mat-label>
+                        <mat-select formControlName="TipoComprobanteId">
+                          <mat-option *ngFor="let objTipoComprobante of lstTipoComprobante" [value]="objTipoComprobante.ConjuntoDatoValor">
+                            {{objTipoComprobante.ConjuntoDatoTexto}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error class="float-end" *ngIf="TipoComprobanteId?.invalid">
+                          *Obligatorio
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field class="control-full-width"
+                                      [ngClass]="{'has-danger': IngresoSerieComprobante?.invalid && (IngresoSerieComprobante?.dirty
+                                      || IngresoSerieComprobante?.touched),'has-success': IngresoSerieComprobante?.valid && (IngresoSerieComprobante?.dirty
+                                      || IngresoSerieComprobante?.touched)}">
+                        <mat-label>SERIE DE DOCUMENTO</mat-label>
+                        <input matInput type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" formControlName="IngresoSerieComprobante" maxlength="10" required>
+                        <mat-error *ngFor="let validacion of mensajesValidacion.IngresoSerieComprobante">
+                          <mat-error class="error-message" *ngIf="frmPrincipal.get('IngresoSerieComprobante')?.hasError(validacion.type) && (frmPrincipal.get('IngresoSerieComprobante')?.dirty || frmPrincipal.get('IngresoSerieComprobante')?.touched)">{{validacion.message}}</mat-error>
+                        </mat-error>
+                        <span class="form-control-feedback" style="padding-bottom:20px">
+                          <i class="material-icons" *ngIf="IngresoSerieComprobante?.valid && (IngresoSerieComprobante?.dirty || IngresoSerieComprobante?.touched)">done</i>
+                          <i class="material-icons" *ngIf="IngresoSerieComprobante?.invalid && (IngresoSerieComprobante?.dirty || IngresoSerieComprobante?.touched)">clear</i>
+                        </span>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field class="control-full-width"
+                                      [ngClass]="{'has-danger': IngresoNroComprobante?.invalid && (IngresoNroComprobante?.dirty
+                                      || IngresoNroComprobante?.touched),'has-success': IngresoNroComprobante?.valid && (IngresoNroComprobante?.dirty
+                                      || IngresoNroComprobante?.touched)}">
+                        <mat-label>NÚMERO DE DOCUMENTO</mat-label>
+                        <input matInput type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" formControlName="IngresoNroComprobante" maxlength="20" required>
+                        <mat-error *ngFor="let validacion of mensajesValidacion.IngresoNroComprobante">
+                          <mat-error class="error-message" *ngIf="frmPrincipal.get('IngresoNroComprobante')?.hasError(validacion.type) && (frmPrincipal.get('IngresoNroComprobante')?.dirty || frmPrincipal.get('IngresoNroComprobante')?.touched)">{{validacion.message}}</mat-error>
+                        </mat-error>
+                        <span class="form-control-feedback" style="padding-bottom:20px">
+                          <i class="material-icons" *ngIf="IngresoNroComprobante?.valid && (IngresoNroComprobante?.dirty || IngresoNroComprobante?.touched)">done</i>
+                          <i class="material-icons" *ngIf="IngresoNroComprobante?.invalid && (IngresoNroComprobante?.dirty || IngresoNroComprobante?.touched)">clear</i>
+                        </span>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                      <mat-form-field>
+                        <mat-label>FECHA DE INGRESO</mat-label>
+                        <input type="date" matInput formControlName="IngresoFecha">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <!--<mat-form-field>
+                        <mat-label>Responsable de Recojo</mat-label>
+                        <mat-select formControlName="PersonaRecojoId">
+                          <mat-option *ngFor="let objUsuario of lstUsuario" [value]="objUsuario.PersonaEmpresaId">
+                            {{objUsuario.PersonaEmpresaNombre}} {{objUsuario.PersonaEmpresaApellidoPaterno}} {{objUsuario.PersonaEmpresaApellidoMaterno}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error class="float-end" *ngIf="PersonaRecojoId?.invalid">
+                          *Obligatorio
+                        </mat-error>
+                      </mat-form-field>-->
+                      <mat-form-field>
+                        <mat-label>Responsable de Recojo</mat-label>
+                        <mat-select formControlName="PersonaRecojoId">
+                          <mat-select-filter [displayMember]="'nombreUsuarioCompleto'"
+                                             [noResultsMessage]="'No se encontraron registros'"
+                                             [placeholder]="'Buscar una Persona'"
+                                             [array]="lstUsuario" (filteredReturn)="lstUsuarioFiltro=$event">
+                          </mat-select-filter>
+                          <mat-option *ngFor="let objUsuario of lstUsuarioFiltro"
+                                      [value]="objUsuario.PersonaEmpresaId">
+                            {{objUsuario.PersonaEmpresaNombre}} {{objUsuario.PersonaEmpresaApellidoPaterno}} {{objUsuario.PersonaEmpresaApellidoMaterno}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="PersonaRecojoId?.invalid">
+                          *Requerido
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="row mb-2">
+              <div class="col-md-12">
+                <button mat-fab color="warn" (click)="agregarDetalle()" class="derecha">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="material-datatables">
+                  <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th class="encabezado-tabla">TIPO DE PRODUCTO</th>
+                        <th class="encabezado-tabla">CODIGO</th>
+                        <th class="encabezado-tabla">DESCRIPCION DE PRODUCTO</th>
+                        <th class="encabezado-tabla"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let objProducto of lstProductosAgregados; let indice = index">
+                        <tr>
+                          <td>{{indice+1}}</td>
+                          <td>{{objProducto.TipoProductoTexto}}</td>
+                          <td>
+                            <ng-container *ngIf="objProducto.TipoChip=='R'">
+                              {{objProducto.Desde}} -  {{objProducto.Hasta}}
+                            </ng-container>
+                            <ng-container *ngIf="objProducto.TipoChip!='R'">
+                              {{objProducto.ProductoCodigo}}
+                            </ng-container>
+                          </td>
+                          <td>{{objProducto.ProductoNombre}}</td>
+                          <td class="celda-derecha">
+                            <button class="btn btn-link color-primary" title="Editar" matTooltip="Editar" (click)="editarDetalle()">
+                              <mat-icon>edit</mat-icon>
+                            </button>
+                            <button class="btn btn-link color-secondary" title="Eliminar" matTooltip="Eliminar" (click)="eliminarItem(objProducto)">
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                            <button class="btn btn-link color-secondary" title="Ver" matTooltip="Visualizar">
+                              <mat-icon>ver</mat-icon>
+                            </button>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container *ngIf="lstProductosAgregados.length==0">
+                        <tr>
+                          <td colspan="5" class="text-danger text-center">
+                            NO SE AGREGARON DETALLES
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="4">
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-11">
+                <button mat-fab color="secondary" (click)="retroceder()" title="Retroceder">
+                  <mat-icon>arrow_back</mat-icon>
+                </button>
+              </div>
+              <div class="col-md-1">
+                <button mat-fab color="warn" (click)="guardarIngreso(frmPrincipal.value)" [disabled]="frmPrincipal.invalid || lstProductosAgregados.length==0" title="Guardar Datos">
+                  <mat-icon>save</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

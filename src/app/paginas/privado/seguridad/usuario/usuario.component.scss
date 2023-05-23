@@ -1,0 +1,29 @@
+.encabezado-tabla {
+  text-align: left;
+  font-weight: bold;
+}
+
+.encabezado-tabla.index {
+  width: 3%;
+}
+.encabezado-tabla.nombres {
+  width: 25%;
+}
+.encabezado-tabla.tipoDocumento {
+  width: 7%;
+}
+.encabezado-tabla.nDcumento {
+  width: 8%;
+}
+.encabezado-tabla.celular {
+  width: 10%;
+}
+.encabezado-tabla.grupo {
+  width: 8%;
+}
+.encabezado-tabla.estado {
+  width: 1%;
+}
+.encabezado-tabla.acciones {
+  width: 20%;
+}

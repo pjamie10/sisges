@@ -1,0 +1,173 @@
+<mat-toolbar matDialogTitle class="m-0" color="warn">
+  <span mat-dialog-title>{{titulo}}</span>
+  <span class="fill-remaining-space"></span>
+  <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-dialog-content class="pt-4 m-0">
+  <form [formGroup]="frmPrincipal">
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="control-full-width" [ngClass]="{'has-danger': TipoDocumentoId?.invalid && (TipoDocumentoId?.dirty || TipoDocumentoId?.touched),
+                      'has-success': TipoDocumentoId?.valid && (TipoDocumentoId?.dirty || TipoDocumentoId?.touched)}">
+          <mat-label>Tipo de Documento</mat-label>
+          <mat-select formControlName="TipoDocumentoId" [(ngModel)]="tipoDocumentoIdentidad" (selectionChange)="seleccionarTipoDocumentoIdentidad($event.value)">
+            <mat-option *ngFor="let objTipoDocumento of lstTipoDocumentoIdentidad" [value]="objTipoDocumento.ConjuntoDatoValor">
+              {{objTipoDocumento.ConjuntoDatoTexto}}
+            </mat-option>
+          </mat-select>
+          <mat-error class="float-end" *ngIf="TipoDocumentoId?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="control-full-width">
+          <mat-label>N° Documento</mat-label>
+          <input matInput formControlName="PersonaEmpresaNumeroDocumento" [value]="objPersona.PersonaEmpresaNumeroDocumento" maxlength="{{numeroCaracteres}}">
+          <mat-error class="float-end" *ngIf="PersonaEmpresaNumeroDocumento?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-1">
+        <button type="submit" mat-mini-fab color="primary"  (click)="buscarPersonaPorTipoNumeroDocumento()" [hidden]="vPersonaId != 0" [disabled]="(TipoDocumentoId?.invalid || PersonaEmpresaNumeroDocumento?.invalid) || vPersonaId != 0 ">
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': PersonaEmpresaNombre?.invalid,
+                      'has-success': PersonaEmpresaNombre?.valid}">
+          <mat-label>Nombre(s)</mat-label>
+          <input matInput formControlName="PersonaEmpresaNombre" type="text" >
+          <span class="form-control-feedback">
+            <i class="material-icons" *ngIf="PersonaEmpresaNombre?.valid">done</i>
+          </span>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': PersonaEmpresaApellidoPaterno?.invalid,
+                      'has-success': PersonaEmpresaApellidoPaterno?.valid}">
+          <mat-label>Apellido Paterno</mat-label>
+          <input matInput formControlName="PersonaEmpresaApellidoPaterno" type="text" >
+          <span class="form-control-feedback">
+            <i class="material-icons" *ngIf="PersonaEmpresaApellidoPaterno?.valid">done</i>
+          </span>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': PersonaEmpresaApellidoMaterno?.invalid,
+                      'has-success': PersonaEmpresaApellidoMaterno?.valid}">
+          <mat-label>Apellido Materno</mat-label>
+          <input matInput formControlName="PersonaEmpresaApellidoMaterno" type="text" >
+          <span class="form-control-feedback">
+            <i class="material-icons" *ngIf="PersonaEmpresaApellidoMaterno?.valid">done</i>
+          </span>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': PersonaEmpresaDireccion?.invalid,
+                      'has-success': PersonaEmpresaDireccion?.valid}">
+          <mat-label>Dirección</mat-label>
+          <input matInput formControlName="PersonaEmpresaDireccion" type="text">
+          <mat-error *ngFor="let validacion of mensajesValidacion.PersonaEmpresaDireccion">
+            <mat-error class="error-message" *ngIf="frmPrincipal.get('PersonaEmpresaDireccion')?.hasError(validacion.type)">{{validacion.message}}</mat-error>
+          </mat-error>
+          <span class="form-control-feedback">
+            <i class="material-icons" *ngIf="PersonaEmpresaDireccion?.valid">done</i>
+          </span>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field class="control-full-width">
+          <mat-label>Fecha de Nacimiento</mat-label>
+          <input type="date" matInput formControlName="PersonaEmpresaFechaNacimiento">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field class="control-full-width">
+          <mat-label>Correo</mat-label>
+          <input matInput formControlName="PersonaEmpresaCorreo">
+          <mat-error class="float-end" *ngIf="PersonaEmpresaCorreo?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': PersonaEmpresaCelular?.invalid,
+                      'has-success': PersonaEmpresaCelular?.valid}">
+          <mat-label>N° Celular</mat-label>
+          <input matInput formControlName="PersonaEmpresaCelular" type="text" maxlength="9" onkeypress="return(event.charCode >= 48 && event.charCode <= 57)">
+          <mat-error *ngFor="let validacion of mensajesValidacion.PersonaEmpresaCelular">
+            <mat-error class="error-message" *ngIf="frmPrincipal.get('PersonaEmpresaCelular')?.hasError(validacion.type) && (frmPrincipal.get('PersonaEmpresaCelular')?.dirty || frmPrincipal.get('PersonaEmpresaCelular')?.touched)">{{validacion.message}}</mat-error>
+          </mat-error>
+          <span class="form-control-feedback">
+            <i class="material-icons" *ngIf="PersonaEmpresaCelular?.valid">done</i>
+          </span>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field class="control-full-width">
+          <mat-label>Razon Social</mat-label>
+          <input matInput formControlName="PersonaEmpresaRazonSocial">
+          <mat-error class="float-end" *ngIf="PersonaEmpresaRazonSocial?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': PersonaEmpresaSexo?.invalid && (PersonaEmpresaSexo?.dirty || PersonaEmpresaSexo?.touched),
+                      'has-success': PersonaEmpresaSexo?.valid && (PersonaEmpresaSexo?.dirty || PersonaEmpresaSexo?.touched)}">
+          <mat-label>Sexo</mat-label>
+          <mat-select formControlName="PersonaEmpresaSexo">
+            <mat-option *ngFor="let objSexo of lstSexo" [value]="objSexo.ConjuntoDatoValor">
+              {{objSexo.ConjuntoDatoTexto}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngFor="let validacion of mensajesValidacion.PersonaEmpresaSexo">
+            <mat-error class="error-message" *ngIf="frmPrincipal.get('PersonaEmpresaSexo')?.hasError(validacion.type) && (frmPrincipal.get('PersonaEmpresaSexo')?.dirty || frmPrincipal.get('PersonaEmpresaSexo')?.touched)">{{validacion.message}}</mat-error>
+          </mat-error>
+          <span class="form-control-feedback">
+            <i class="material-icons" *ngIf="PersonaEmpresaSexo?.valid && (PersonaEmpresaSexo?.dirty || PersonaEmpresaSexo?.touched)"></i>
+            <i class="material-icons" *ngIf="PersonaEmpresaSexo?.invalid && (PersonaEmpresaSexo?.dirty || PersonaEmpresaSexo?.touched)"></i>
+          </span>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': PersonaEmpresaEstado?.invalid && (PersonaEmpresaEstado?.dirty || PersonaEmpresaEstado?.touched),
+                      'has-success': PersonaEmpresaEstado?.valid && (PersonaEmpresaEstado?.dirty || PersonaEmpresaEstado?.touched)}">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="PersonaEmpresaEstado">
+            <mat-option *ngFor="let objEstado of lstEstado" [value]="objEstado.ConjuntoDatoValor">
+              {{objEstado.ConjuntoDatoTexto}}
+            </mat-option>
+          </mat-select>
+          <mat-error class="float-end" *ngIf="PersonaEmpresaEstado?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-fab color="secondary" (click)="matDialogRef.close()" title="Salir">
+    <mat-icon>close</mat-icon>
+  </button>
+  <button mat-fab color="warn" (click)="guardarDatos(frmPrincipal.value)" [disabled]="frmPrincipal.invalid" title="Guardar Datos">
+    <mat-icon>save</mat-icon>
+  </button>
+</mat-dialog-actions>

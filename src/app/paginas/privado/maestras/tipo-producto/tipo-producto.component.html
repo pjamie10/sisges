@@ -1,0 +1,91 @@
+ <div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card ">
+          <div class="card-header card-header-danger card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">local_offer </i>
+            </div>
+            <h4 class="card-title">Gestión de Tipo De Producto</h4>
+          </div>
+          <div class="card-body">
+
+            <div class="row">
+              <div class="col-md-10">
+                <mat-form-field appearance="fill" class="control-full-width">
+                  <mat-label>Buscar Por Tipo De Producto </mat-label>
+                  <input matInput id="txtBuscar" [(ngModel)]="txtBuscar" (keyup)="buscarTipoProducto($event)">
+                  <mat-icon matPrefix>search</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-md-11">
+
+              </div>
+              <div class="col-md-1">
+                <button mat-fab color="warn" (click)="abrirModalProductoDatosTipoProducto(0)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <table class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th class="encabezado-tabla index">#</th>
+                      <th class="encabezado-tabla descripcion">DESCRIPCIÓN</th>
+                      <th class="encabezado-tabla estado">ESTADO</th>
+                      <th class="encabezado-tabla acciones"></th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="lstTipoProducto.length>0">
+                    <tr *ngFor="let objTipoProducto of lstTipoProducto; let i = index">
+                      <td>
+                        {{i+1}}
+                      </td>
+                      <td>
+                        {{objTipoProducto.TipoProductoDescripcion }}
+                      </td>
+                      <td>
+                        {{objTipoProducto.TipoProductoEstadoTexto}}
+                      </td>
+                      <td class="celda-derecha">
+                        <button class="btn btn-link color-primary" title="Editar" matTooltip="Editar" (click)="abrirModalProductoDatosTipoProducto(objTipoProducto.TipoProductoId)">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button class="btn btn-link color-secondary" title="Eliminar" matTooltip="Eliminar" (click)="eliminarTipoProducto(objTipoProducto)" *ngIf="objTipoProducto.TipoProductoEstado!='X'">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="lstTipoProducto.length==0">
+                    <tr>
+                      <td colspan="6" class="text-center text-danger">
+                        No Existen Elementos Registrados
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="6">
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+          </div>
+          <div class="card-footer">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,45 @@
+<mat-toolbar matDialogTitle class="m-0" color="warn">
+  <span mat-dialog-title>{{titulo}}</span>
+  <span class="fill-remaining-space"></span>
+  <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-dialog-content class="pt-4 m-0">
+  <form [formGroup]="frmPrincipal">
+    <div class="row">
+      <div class="col-md-12">
+        <mat-form-field appearance="outline" class="control-full-width">
+          <mat-label>Descripción de Grupo</mat-label>
+          <input matInput formControlName="GrupoDescripcion">
+          <mat-error class="float-end" *ngIf="GrupoDescripcion?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="GrupoEstado">
+            <mat-option *ngFor="let objEstado of lstEstado" [value]="objEstado.ConjuntoDatoValor">
+              {{objEstado.ConjuntoDatoTexto}}
+            </mat-option>
+          </mat-select>
+          <mat-error class="float-end" *ngIf="GrupoEstado?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-fab color="secondary" (click)="matDialogRef.close()" title="Salir">
+    <mat-icon>close</mat-icon>
+  </button>
+  <button mat-fab color="warn" (click)="guardarDatos(frmPrincipal.value)" [disabled]="frmPrincipal.invalid" title="Guardar Datos">
+    <mat-icon>save</mat-icon>
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,51 @@
+.card-body {
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.image-gallery {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.image-card {
+  width: calc(50% - 10px);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.image-card:hover {
+  transform: scale(1.05);
+}
+
+.image-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.logo {
+  text-align: right;
+  margin: 40px;
+}
+
+.casi-logo {
+  margin: 0;
+}

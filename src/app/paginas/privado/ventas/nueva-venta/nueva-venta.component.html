@@ -1,0 +1,406 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-10 me-auto ms-auto">
+        <!--      Wizard container        -->
+        <div class="wizard-container">
+          <div class="card card-wizard" data-color="rose" id="wizardProfile">
+            <form [formGroup]="frmVentas">
+              <div class="card-header card-header-rose card-header-icon">
+                <div class="card-icon">
+                  <i class="material-icons">format_list_bulleted</i>
+                </div>
+                <div class="card-title h3">Registro de Venta</div>
+              </div>
+              <div class="card-body">
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <mat-form-field class="control-full-width" [ngClass]="{'has-danger': TipoComprobanteId?.invalid && (TipoComprobanteId?.dirty || TipoComprobanteId?.touched),
+                      'has-success': TipoComprobanteId?.valid && (TipoComprobanteId?.dirty || TipoComprobanteId?.touched)}">
+                      <mat-label>TIPO DE DOCUMENTO</mat-label>
+                      <mat-select formControlName="TipoComprobanteId" [(ngModel)]="tipoComprobanteSeleccionado" (selectionChange)="seleccionarTipoComprobante($event.value)">
+                        <mat-option *ngFor="let objTipoComprobanteId of lstTipoComprobante" [value]="objTipoComprobanteId.ConjuntoDatoValor">
+                          {{objTipoComprobanteId.ConjuntoDatoTexto}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngFor="let validacion of mensajesValidacion.TipoComprobanteId">
+                        <mat-error class="error-message" *ngIf="frmVentas.get('TipoComprobanteId')?.hasError(validacion.type) && (frmVentas.get('TipoComprobanteId')?.dirty || frmVentas.get('TipoComprobanteId')?.touched)">{{validacion.message}}</mat-error>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-2">
+                    <mat-form-field class="control-full-width" [ngClass]="{'has-danger': ComprobanteId?.invalid && (ComprobanteId?.dirty || ComprobanteId?.touched),
+                      'has-success': ComprobanteId?.valid && (ComprobanteId?.dirty || ComprobanteId?.touched)}">
+                      <mat-label>SERIE</mat-label>
+                      <mat-select formControlName="ComprobanteId" [(ngModel)]="serieComprobanteSeleccionado" (selectionChange)="seleccionarSerieComprobante($event.value)">
+                        <mat-option *ngFor="let objComprobanteId of lstComprobante" [value]="objComprobanteId.ComprobanteId">
+                          {{objComprobanteId.ComprobanteSerie}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngFor="let validacion of mensajesValidacion.ComprobanteId">
+                        <mat-error class="error-message" *ngIf="frmVentas.get('ComprobanteId')?.hasError(validacion.type) && (frmVentas.get('ComprobanteId')?.dirty || frmVentas.get('ComprobanteId')?.touched)">{{validacion.message}}</mat-error>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-2">
+                    <mat-form-field class="control-full-width">
+                      <mat-label>NÚMERO</mat-label>
+                      <input matInput formControlName="ComprobanteNumero" readonly>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-label>FECHA</mat-label>
+                      <input type="date" matInput formControlName="VentaFecha" [value]="fechaActual">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-8">
+                    <!--<mat-form-field>
+                      <mat-label>ASESOR DE VENTA</mat-label>
+                      <mat-select formControlName="AsesorId">
+                        <mat-option *ngFor="let objUsuario of lstUsuario" [value]="objUsuario.UsuarioId">
+                          {{objUsuario.PersonaEmpresaNombre}} {{objUsuario.PersonaEmpresaApellidoPaterno}} {{objUsuario.PersonaEmpresaApellidoMaterno}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error class="float-end" *ngIf="AsesorId?.invalid">
+                        *Obligatorio
+                      </mat-error>
+                    </mat-form-field>-->
+                    <mat-form-field>
+                      <mat-label>ASESOR DE VENTA</mat-label>
+                      <mat-select formControlName="AsesorId">
+                        <mat-select-filter [displayMember]="'nombreUsuarioCompleto'"
+                                           [noResultsMessage]="'No se encontraron registros'"
+                                           [placeholder]="'Buscar un Asesor'"
+                                           [array]="lstUsuario" (filteredReturn)="lstUsuarioFiltro=$event">
+                        </mat-select-filter>
+                        <mat-option *ngFor="let objUsuario of lstUsuarioFiltro"
+                                    [value]="objUsuario.UsuarioId">
+                          {{objUsuario.PersonaEmpresaNombre}} {{objUsuario.PersonaEmpresaApellidoPaterno}} {{objUsuario.PersonaEmpresaApellidoMaterno}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="AsesorId?.invalid">
+                        *Requerido
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="wizard-navigation">
+                <ul class="nav nav-pills">
+                  <li class="nav-item">
+                    <a class="nav-link active" href="#general" id="datosGenerales" data-toggle="tab" role="tab">
+                      Datos Generales
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#ventas" data-toggle="tab" role="tab">
+                      Datos de la Venta
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#clientes" data-toggle="tab" role="tab">
+                      Datos del Cliente
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="tab-pane active" id="general">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="row">
+                          <div class="col-md-12 text-center">
+                            <div class="etiquetas">
+                              <mat-error style="display:contents" *ngIf="categoriaSeleccionada==0">
+                                *
+                              </mat-error>
+                              Seleccione Categoria:
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row justify-content-center" *ngFor="let objCategoria of lstCategoria">
+                          <div class="col-md-12">
+                            <div class="choice" data-toggle="wizard-radio-categoria" (click)="seleccionarCategoria($event)">
+                              <input type="radio" name="categoria" value="{{objCategoria.CategoriaId}}">
+                              <div class="icon">
+                                <mat-icon *ngIf="objCategoria.CategoriaId==1" class="icono-centrado">library_add</mat-icon>
+                                <mat-icon *ngIf="objCategoria.CategoriaId==2" class="icono-centrado">swipe_right</mat-icon>
+                                <mat-icon *ngIf="objCategoria.CategoriaId==3" class="icono-centrado">autorenew</mat-icon>
+                              </div>
+                              <span class="h6">
+                                {{objCategoria.CategoriaNombre}}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4" *ngIf="categoriaSeleccionada!=0">
+                        <div class="row">
+                          <div class="col-md-12 text-center">
+                            <div class="etiquetas">
+                              <mat-error style="display:contents" *ngIf="modalidadSeleccionada==''">
+                                *
+                              </mat-error>
+                              Seleccione Modalidad:
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row justify-content-center" *ngFor="let objModalidad of lstModalidad">
+                          <div class="col-md-12">
+                            <div class="choice" data-toggle="wizard-radio-modalidad" (click)="seleccionarModalidad($event)">
+                              <input type="radio" name="modalidad" value="{{objModalidad.ModalidadId}}">
+                              <div class="icon">
+                                <mat-icon *ngIf="objModalidad.ModalidadCodigo=='01'" class="icono-centrado">sim_card</mat-icon>
+                                <mat-icon *ngIf="objModalidad.ModalidadCodigo=='01'" class="icono-centrado">attach_money</mat-icon>
+                                <mat-icon *ngIf="objModalidad.ModalidadCodigo=='02'" class="icono-centrado">sim_card</mat-icon>
+                              </div>
+                              <span class="h6">
+                                {{objModalidad.ModalidadNombre}}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4" *ngIf="categoriaSeleccionada!=0 && modalidadSeleccionada !=''">
+                        <div class="row">
+                          <div class="col-md-12 text-center">
+                            <div class="etiquetas">
+                              <mat-error style="display:contents" *ngIf="tipoSeleccionado==''">
+                                *
+                              </mat-error>
+                              Seleccione Tipo de Venta
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row justify-content-center" role="tablist">
+                          <div class="col-sm-12" *ngIf="categoriaSeleccionada!=3">
+                            <div class="choice" data-toggle="wizard-radio-tipo" (click)="seleccionarTipo($event,'C')">
+                              <input type="radio" id="radioChip" name="tipoVenta" value="C">
+                              <div class="icon">
+                                <mat-icon class="icono-centrado">sim_card</mat-icon>
+                              </div>
+                              <h6>Chip</h6>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row justify-content-center" role="tablist">
+                          <div class="col-sm-12">
+                            <div class="choice" data-toggle="wizard-radio-tipo" (click)="seleccionarTipo($event,'EC')">
+                              <input type="radio" id="radioEquipoChip" name="tipoVenta" value="EC">
+                              <div class="icon">
+                                <mat-icon class="icono-centrado">phone_iphone</mat-icon>
+                                <mat-icon class="icono-centrado">sim_card</mat-icon>
+                              </div>
+                              <h6>Equipo + Chip</h6>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row justify-content-center" role="tablist">
+                          <div class="col-sm-12" *ngIf="categoriaSeleccionada==3">
+                            <div class="choice" data-toggle="wizard-radio-tipo" (click)="seleccionarTipo($event,'E')">
+                              <input type="radio" id="radioEquipo" name="tipoVenta" value="E">
+                              <div class="icon">
+                                <mat-icon class="icono-centrado">phone_iphone</mat-icon>
+                              </div>
+                              <h6>Equipo</h6>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="ventas">
+                    <div class="row">
+                      <div class="col-md-12 ml-auto mr-auto">
+                        <div class="page-categories">
+                          <div class="row justify-content-center">
+                            <div class="col-sm-3">
+                              <mat-form-field class="control-full-width">
+                                <mat-label class="etiquetas">CATEGORIA SELECCIONADA:</mat-label>
+                                <input type="text" matInput required disabled [value]="categoriaSeleccionadaTexto">
+                              </mat-form-field>
+                            </div>
+                            <div class="col-sm-3">
+                              <mat-form-field class="control-full-width">
+                                <mat-label class="etiquetas">MODALIDAD SELECCIONADA:</mat-label>
+                                <input type="text" matInput required disabled [value]="modalidadSeleccionadatexto">
+                              </mat-form-field>
+                            </div>
+                            <div class="col-sm-3">
+                              <mat-form-field class="control-full-width" *ngIf="tipoSeleccionado=='C'">
+                                <mat-label class="etiquetas">TIPO SELECCIONADO:</mat-label>
+                                <input type="text" matInput required disabled value="SÓLO CHIP">
+                              </mat-form-field>
+                              <mat-form-field class="control-full-width" *ngIf="tipoSeleccionado=='E'">
+                                <mat-label class="etiquetas">TIPO SELECCIONADO:</mat-label>
+                                <input type="text" matInput required disabled value="SÓLO EQUIPO">
+                              </mat-form-field>
+                              <mat-form-field class="control-full-width" *ngIf="tipoSeleccionado=='EC'">
+                                <mat-label class="etiquetas">TIPO SELECCIONADO:</mat-label>
+                                <input type="text" matInput required disabled value="EQUIPO + CHIP">
+                              </mat-form-field>
+                            </div>
+                            <div class="col-md-3" *ngIf="!(categoriaSeleccionada==1 && modalidadSeleccionada=='02' && tipoSeleccionado=='C')">
+                              <mat-form-field class="control-full-width"
+                                              [ngClass]="{'has-danger': VentaSEC?.invalid && (VentaSEC?.dirty || VentaSEC?.touched),'has-success': VentaSEC?.valid && (VentaSEC?.dirty || VentaSEC?.touched)}">
+                                <mat-label>SEC</mat-label>
+                                <input type="text" onkeypress="return(event.charCode >= 48 && event.charCode <= 57)" matInput formControlName="VentaSEC" maxlength="8">
+                                <mat-error *ngFor="let validacion of mensajesValidacion.VentaSEC">
+                                  <mat-error class="error-message" *ngIf="frmVentas.get('VentaSEC')?.hasError(validacion.type) && (frmVentas.get('VentaSEC')?.dirty || frmVentas.get('VentaSEC')?.touched)">{{validacion.message}}</mat-error>
+                                </mat-error>
+                                <span class="form-control-feedback" style="padding-bottom:20px">
+                                  <i class="material-icons" *ngIf="VentaSEC?.valid && (VentaSEC?.dirty || VentaSEC?.touched)">done</i>
+                                  <i class="material-icons" *ngIf="VentaSEC?.invalid && (VentaSEC?.dirty || VentaSEC?.touched)">clear</i>
+                                </span>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <hr />
+                          <div class="row" *ngIf="tipoSeleccionado!=''">
+                            <input type="hidden" id="validaAltaPost" [value]="(hijoAltaPost!=undefined)?(hijoAltaPost.lstDetalleVentaPostpago.length>0):false"/>
+                            <input type="hidden" id="validaAltaPre" [value]="(hijoAltaPre!=undefined)?(hijoAltaPre.lstDetalleVentaPrepago.length>0):false"/>
+                            <input type="hidden" id="validaPortaPost" [value]="(hijoPortaPost!=undefined)?(hijoPortaPost.lstDetalleVentaPostpago.length>0):false"/>
+                            <input type="hidden" id="validaPortaPre" [value]="(hijoPortaPre!=undefined)?(hijoPortaPre.lstDetalleVentaPrepago.length>0):false"/>
+                            <input type="hidden" id="validaRenoPost" [value]="(hijoRenoPost!=undefined)?(hijoRenoPost.lstDetalleVentaPostpago.length>0):false"/>
+                            <input type="hidden" id="validaRenoPre" [value]="(hijoRenoPre!=undefined)?(hijoRenoPre.lstDetalleVentaPrepago.length>0):false"/>
+
+                            <app-alta-prepago *ngIf="categoriaSeleccionada==1 && modalidadSeleccionada=='02'" [tipoVenta]="tipoSeleccionado"></app-alta-prepago>
+                            <app-alta-postpago *ngIf="categoriaSeleccionada==1 && modalidadSeleccionada=='01'" [tipoVenta]="tipoSeleccionado"></app-alta-postpago>
+                            <app-porta-prepago *ngIf="categoriaSeleccionada==2 && modalidadSeleccionada=='02'" [tipoVenta]="tipoSeleccionado"></app-porta-prepago>
+                            <app-porta-postpago *ngIf="categoriaSeleccionada==2 && modalidadSeleccionada=='01'" [tipoVenta]="tipoSeleccionado"></app-porta-postpago>
+                            <app-reno-postpago *ngIf="categoriaSeleccionada==3 && modalidadSeleccionada=='01'" [tipoVenta]="tipoSeleccionado"></app-reno-postpago>
+                            <app-reno-prepago *ngIf="categoriaSeleccionada==3 && modalidadSeleccionada=='02'" [tipoVenta]="tipoSeleccionado"></app-reno-prepago>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="clientes">
+                    <div class="row mb-2">
+                      <div class="col-sm-4">
+                        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': TipoDocumentoId?.invalid && (TipoDocumentoId?.dirty || TipoDocumentoId?.touched),
+                      'has-success': TipoDocumentoId?.valid && (TipoDocumentoId?.dirty || TipoDocumentoId?.touched)}">
+                          <mat-label>TIPO DE DOCUMENTO</mat-label>
+                          <mat-select [(ngModel)]="tipoDocumentoIdentidad" formControlName="TipoDocumentoId" (selectionChange)="seleccionarTipoDocumentoIdentidad($event.value)">
+                            <mat-option *ngFor="let objTipoDocumento of lstTipoDocumentoIdentidad" [value]="objTipoDocumento.ConjuntoDatoValor">
+                              {{objTipoDocumento.ConjuntoDatoTexto}}
+                            </mat-option>
+                          </mat-select>
+                          <mat-error *ngFor="let validacion of mensajesValidacion.TipoDocumentoId">
+                            <mat-error class="error-message" *ngIf="frmVentas.get('TipoDocumentoId')?.hasError(validacion.type) && (frmVentas.get('TipoDocumentoId')?.dirty || frmVentas.get('TipoDocumentoId')?.touched)">{{validacion.message}}</mat-error>
+                          </mat-error>
+                          <span class="form-control-feedback">
+                            <i class="material-icons" *ngIf="TipoDocumentoId?.valid && (TipoDocumentoId?.dirty || TipoDocumentoId?.touched)"><!--done--></i>
+                            <i class="material-icons" *ngIf="TipoDocumentoId?.invalid && (TipoDocumentoId?.dirty || TipoDocumentoId?.touched)"><!--clear--></i>
+                          </span>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-form-field class="control-full-width" [ngClass]="{'has-danger': PersonaEmpresaNumeroDocumento?.invalid && (PersonaEmpresaNumeroDocumento?.dirty || PersonaEmpresaNumeroDocumento?.touched),
+                      'has-success': PersonaEmpresaNumeroDocumento?.valid && (PersonaEmpresaNumeroDocumento?.dirty || PersonaEmpresaNumeroDocumento?.touched)}">
+                          <input matInput formControlName="PersonaEmpresaNumeroDocumento" type="text" placeholder="Número Documento" onkeypress="return(event.charCode >= 48 && event.charCode <= 57 || event.charCode == 13)" (keyup)="buscarPersonaPorTipoNumeroDocumento($event,frmVentas.get('PersonaEmpresaNumeroDocumento')?.value)" maxlength="{{numeroCaracteres}}">
+                          <mat-error *ngFor="let validacion of mensajesValidacion.PersonaEmpresaNumeroDocumento">
+                            <mat-error class="error-message" *ngIf="frmVentas.get('PersonaEmpresaNumeroDocumento')?.hasError(validacion.type) && (frmVentas.get('PersonaEmpresaNumeroDocumento')?.dirty || frmVentas.get('PersonaEmpresaNumeroDocumento')?.touched)">{{validacion.message}}</mat-error>
+                          </mat-error>
+                          <span class="form-control-feedback">
+                            <i class="material-icons" *ngIf="PersonaEmpresaNumeroDocumento?.valid && (PersonaEmpresaNumeroDocumento?.dirty || PersonaEmpresaNumeroDocumento?.touched)">done</i>
+                            <i class="material-icons" *ngIf="PersonaEmpresaNumeroDocumento?.invalid && (PersonaEmpresaNumeroDocumento?.dirty || PersonaEmpresaNumeroDocumento?.touched)">clear</i>
+                          </span>
+                        </mat-form-field>
+
+                      </div>
+                      <!--<div class="col-md-1">
+                        <button type="submit" mat-mini-fab color="primary" (click)="buscarPersonaPorTipoNumeroDocumento(frmVentas.get('PersonaEmpresaNumeroDocumento')?.value)" [disabled]="PersonaEmpresaNumeroDocumento?.invalid">
+                          <mat-icon>search</mat-icon>
+                        </button>
+                      </div>-->
+                    </div>
+                    <div class="row mb-2" *ngIf="tipoDocumentoIdentidad=='6'">
+                      <div class="col-sm-12">
+                        <mat-form-field class="control-full-width">
+                          <input matInput formControlName="PersonaEmpresaRazonSocial" type="text" placeholder="Razon Social">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="tipoDocumentoIdentidad=='6'">
+                      <div class="col-md-12">
+                        <div class="etiquetas">
+                          Datos de Contacto:
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <mat-form-field class="control-full-width">
+                          <input matInput formControlName="PersonaEmpresaNombre" type="text" onkeydown="return /[a-z, ]/i.test(event.key)" placeholder="Nombre(s)">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-form-field class="control-full-width">
+                          <input matInput type="text" formControlName="PersonaEmpresaApellidoPaterno" onkeydown="return /[a-z, ]/i.test(event.key)" placeholder="Apellido Paterno">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-form-field class="control-full-width">
+                          <input matInput type="text" formControlName="PersonaEmpresaApellidoMaterno" onkeydown="return /[a-z, ]/i.test(event.key)" placeholder="Apellido Materno">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-form-field class="control-full-width">
+                          <input matInput type="text" formControlName="PersonaEmpresaDireccion" placeholder="Dirección">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-2" *ngIf="tipoDocumentoIdentidad=='1'">
+                        <mat-form-field class="control-full-width">
+                          <mat-label>Fecha de Nacimiento</mat-label>
+                          <input type="date" matInput formControlName="PersonaEmpresaFechaNacimiento" [value]="fechaActual">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-2">
+                        <mat-form-field class="control-full-width">
+                          <mat-label>Celular</mat-label>
+                          <input type="text" matInput formControlName="PersonaEmpresaCelular" maxlength="9">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-2" *ngIf="tipoDocumentoIdentidad=='1'">
+                        <mat-form-field class="control-full-width">
+                          <mat-label>Sexo</mat-label>
+                          <mat-select formControlName="PersonaEmpresaSexo">
+                            <mat-option *ngFor="let objSexo of lstSexo" [value]="objSexo.ConjuntoDatoValor">
+                              {{objSexo.ConjuntoDatoTexto}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div>
+                  <button mat-fab color="secondary" class="btn btn-salir btn-fill btn-wd" (click)="retroceder()" title="Salir">
+                    <mat-icon>arrow_back</mat-icon>
+                  </button>
+                </div>
+                <div class="me-auto">
+                  <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous" value="Anterior">
+                </div>
+                <div class="ms-auto">
+                  <input type="button" class="btn btn-next btn-fill btn-rose btn-wd" name="next" value="Siguiente">
+                  <input type="submit" class="btn btn-finish btn-fill btn-rose btn-wd" name="finish" value="Grabar" (click)="guardarVenta()" style="display: none;">
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- wizard container -->
+      </div>
+    </div>
+  </div>
+</div>

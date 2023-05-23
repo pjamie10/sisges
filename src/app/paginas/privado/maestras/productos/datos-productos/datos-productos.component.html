@@ -1,0 +1,115 @@
+<mat-toolbar matDialogTitle class="m-0" color="warn">
+  <span mat-dialog-title>{{titulo}}</span>
+  <span class="fill-remaining-space"></span>
+  <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-dialog-content class="pt-4 m-0">
+  <form [formGroup]="frmPrincipal">
+    <div class="row">
+      <div class="col-md-8">
+        <mat-form-field appearance="outline" class="control-full-width" [ngClass]="{'has-danger': TipoProductoId?.invalid && (TipoProductoId?.dirty || TipoProductoId?.touched),
+                      'has-success': TipoProductoId?.valid && (TipoProductoId?.dirty || TipoProductoId?.touched)}">
+          <mat-label>Tipo de Producto</mat-label>
+          <mat-select formControlName="TipoProductoId">
+            <mat-option *ngFor="let objTipoProducto of lstTipoProducto" [value]="objTipoProducto.TipoProductoId">
+              {{objTipoProducto.TipoProductoDescripcion}}
+            </mat-option>
+          </mat-select>
+          <mat-error class="float-end" *ngIf="TipoProductoId?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="control-full-width">
+          <mat-label>Código de Producto</mat-label>
+          <input matInput formControlName="ProductoId" maxlength="10" (blur)="buscarPorCodigo($event)">
+          <mat-error class="float-end" *ngIf="ProductoId?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mat-form-field appearance="outline" class="control-full-width">
+          <mat-label>Nombre de Producto</mat-label>
+          <input matInput formControlName="ProductoNombre">
+          <mat-error class="float-end" *ngIf="ProductoNombre?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mat-form-field appearance="outline" class="control-full-width">
+          <mat-label>Descripción de Producto</mat-label>
+          <input matInput formControlName="ProductoDescripcion">
+          <mat-error class="float-end" *ngIf="ProductoDescripcion?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <!--[ngClass]="{'has-danger': MarcaId?.invalid && (MarcaId?.dirty || MarcaId?.touched),
+        'has-success': MarcaId?.valid && (MarcaId?.dirty || MarcaId?.touched)}"-->
+        <mat-form-field appearance="outline" class="control-full-width">
+          <mat-label>Marca</mat-label>
+          <mat-select formControlName="MarcaId">
+            <mat-option *ngFor="let objMarca of lstMarca" [value]="objMarca.MarcaId">
+              {{objMarca.MarcaDescripcion}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngFor="let validacion of mensajesValidacion.MarcaId">
+            <mat-error class="error-message" *ngIf="frmPrincipal.get('MarcaId')?.hasError(validacion.type) && (frmPrincipal.get('MarcaId')?.dirty || frmPrincipal.get('MarcaId')?.touched)">{{validacion.message}}</mat-error>
+          </mat-error>
+          <!--<span class="form-control-feedback">
+      <i class="material-icons" *ngIf="MarcaId?.valid && (MarcaId?.dirty || MarcaId?.touched)">done</i>
+      <i class="material-icons" *ngIf="MarcaId?.invalid && (MarcaId?.dirty || MarcaId?.touched)">clear</i>
+    </span>-->
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Color</mat-label>
+          <mat-select formControlName="ColorId">
+            <mat-option *ngFor="let objColor of lstColor" [value]="objColor.ColorId">
+              {{objColor.ColorDescripcion}}
+            </mat-option>
+          </mat-select>
+          <mat-error class="float-end" *ngIf="ColorId?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="ProductoEstado">
+            <mat-option *ngFor="let objEstado of lstEstado" [value]="objEstado.ConjuntoDatoValor">
+              {{objEstado.ConjuntoDatoTexto}}
+            </mat-option>
+          </mat-select>
+          <mat-error class="float-end" *ngIf="ProductoEstado?.invalid">
+            *Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-fab color="secondary" (click)="matDialogRef.close()" title="Salir">
+    <mat-icon>close</mat-icon>
+  </button>
+  <button mat-fab color="warn" (click)="guardarDatos(frmPrincipal.value)" title="Guardar Datos">
+    <mat-icon>save</mat-icon>
+  </button>
+</mat-dialog-actions>

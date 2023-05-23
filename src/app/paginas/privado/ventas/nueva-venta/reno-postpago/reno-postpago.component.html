@@ -1,0 +1,253 @@
+<div class="row">
+  <div class="col-md-6">
+    <form [formGroup]="frmRenoPostpagoEquipo">
+      <ng-container *ngIf="tipoVenta=='E' || tipoVenta=='EC'">
+        <div class="row">
+          <div class="col-md-8">
+            <mat-form-field class="control-full-width" [ngClass]="
+                      {'has-danger': VentaNumeroCelular?.invalid && (VentaNumeroCelular?.dirty || VentaNumeroCelular?.touched),
+                      'has-success': VentaNumeroCelular?.valid && (VentaNumeroCelular?.dirty || VentaNumeroCelular?.touched)}">
+              <mat-label>NRO. REGISTRADO</mat-label>
+              <input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" matInput formControlName="VentaNumeroCelular" maxlength="9" required>
+              <mat-error *ngFor="let validacion of mensajesValidacion.VentaNumeroCelular">
+                <mat-error class="error-message" *ngIf="frmRenoPostpagoEquipo.get('VentaNumeroCelular')?.hasError(validacion.type) && (frmRenoPostpagoEquipo.get('VentaNumeroCelular')?.dirty || frmRenoPostpagoEquipo.get('VentaNumeroCelular')?.touched)">{{validacion.message}}</mat-error>
+              </mat-error>
+              <span class="form-control-feedback">
+                <i class="material-icons" *ngIf="VentaNumeroCelular?.valid && (VentaNumeroCelular?.dirty || VentaNumeroCelular?.touched)">done</i>
+                <i class="material-icons" *ngIf="VentaNumeroCelular?.invalid && (VentaNumeroCelular?.dirty || VentaNumeroCelular?.touched)">clear</i>
+              </span>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="control-full-width" [ngClass]="{'has-danger': Planes?.invalid && (Planes?.dirty || Planes?.touched),
+                      'has-success': Planes?.valid && (Planes?.dirty || Planes?.touched)}">
+              <mat-label>PLAN</mat-label>
+              <mat-select formControlName="Planes">
+                <mat-option *ngFor="let objPlan of lstPlanes" [value]="objPlan.PlanId">
+                  {{objPlan.PlanDescripcion }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngFor="let validacion of mensajesValidacion.Planes">
+                <mat-error class="error-message" *ngIf="frmRenoPostpagoEquipo.get('Planes')?.hasError(validacion.type) && (frmRenoPostpagoEquipo.get('Planes')?.dirty || frmRenoPostpagoEquipo.get('Planes')?.touched)">{{validacion.message}}</mat-error>
+              </mat-error>
+              <span class="form-control-feedback">
+                <i class="material-icons" *ngIf="Planes?.valid && (Planes?.dirty || Planes?.touched)"><!--done--></i>
+                <i class="material-icons" *ngIf="Planes?.invalid && (Planes?.dirty || Planes?.touched)"><!--clear--></i>
+              </span>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <mat-form-field class="control-full-width"
+                            [ngClass]="{'has-danger': IMEIId?.invalid || IMEI?.invalid && (IMEI?.dirty || IMEI?.touched),
+                                    'has-success': IMEIId?.valid && IMEI?.valid && (IMEI?.dirty || IMEI?.touched)}">
+              <mat-label>IMEI</mat-label>
+              <input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 13)" matInput formControlName="IMEI" maxlength="15" (keyup)="ObtenerProductoPorTipoCodigo($event,1,frmRenoPostpagoEquipo.get('IMEI')?.value)" required>
+              <mat-error *ngFor="let validacion of mensajesValidacion.IMEI">
+                <mat-error class="error-message" *ngIf="frmRenoPostpagoEquipo.get('IMEI')?.hasError(validacion.type) && (frmRenoPostpagoEquipo.get('IMEI')?.dirty || frmRenoPostpagoEquipo.get('IMEI')?.touched)">{{validacion.message}}</mat-error>
+              </mat-error>
+              <span class="form-control-feedback" style="padding-bottom:20px">
+                <i class="material-icons" *ngIf="IMEIId?.valid && IMEI?.valid && (IMEI?.dirty || IMEI?.touched)">done</i>
+                <i class="material-icons" *ngIf="IMEIId?.invalid || IMEI?.invalid && (IMEI?.dirty || IMEI?.touched)">clear</i>
+              </span>
+            </mat-form-field>
+          </div>
+          <!--<div class="col-md-1">
+          <button type="button" mat-mini-fab color="primary" (click)="ObtenerProductoPorTipoCodigo(1,frmRenoPostpagoEquipo.get('IMEI')?.value)">
+            <mat-icon>search</mat-icon>
+          </button>
+        </div>-->
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <mat-form-field class="control-full-width">
+              <mat-label>NOMBRE DEL EQUIPO</mat-label>
+              <input matInput formControlName="nombreEquipo" readonly>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field class="control-full-width" [ngClass]="{'has-danger': TipoVentaId?.invalid && (TipoVentaId?.dirty || TipoVentaId?.touched),
+                      'has-success': TipoVentaId?.valid && (TipoVentaId?.dirty || TipoVentaId?.touched)}">
+              <mat-label>TIPO DE VENTA</mat-label>
+              <mat-select formControlName="TipoVentaId" (selectionChange)="seleccionarTipoVenta($event.value)">
+                <mat-option *ngFor="let objTipoVentas of lstTipoVentas" [value]="objTipoVentas.ConjuntoDatoValor">
+                  {{objTipoVentas.ConjuntoDatoTexto }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngFor="let validacion of mensajesValidacion.TipoVentas">
+                <mat-error class="error-message" *ngIf="frmRenoPostpagoEquipo.get('TipoVentas')?.hasError(validacion.type) && (frmRenoPostpagoEquipo.get('TipoVentas')?.dirty || frmRenoPostpagoEquipo.get('TipoVentas')?.touched)">{{validacion.message}}</mat-error>
+              </mat-error>
+              <span class="form-control-feedback">
+                <i class="material-icons" *ngIf="TipoVentaId?.valid && (TipoVentaId?.dirty || TipoVentaId?.touched)"><!--done--></i>
+                <i class="material-icons" *ngIf="TipoVentaId?.invalid && (TipoVentaId?.dirty || TipoVentaId?.touched)"><!--clear--></i>
+              </span>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="control-full-width" [ngClass]="{'has-danger': Renta?.invalid && (Renta?.dirty || Renta?.touched),
+                      'has-success': Renta?.valid && (Renta?.dirty || Renta?.touched)}">
+              <mat-label>RENTA</mat-label>
+              <input matInput formControlName="Renta" type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+              <span class="form-control-feedback">
+                <i class="material-icons" *ngIf="Renta?.valid && (Renta?.dirty || Renta?.touched)">done</i>
+                <i class="material-icons" *ngIf="Renta?.invalid && (Renta?.dirty || Renta?.touched)">clear</i>
+              </span>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="control-full-width" [ngClass]="{'has-danger': Monto?.invalid && (Monto?.dirty || Monto?.touched),
+                      'has-success': Monto?.valid && (Monto?.dirty || Monto?.touched)}">
+              <mat-label>MONTO S/</mat-label>
+              <input formControlName="Monto" pattern="^\d+(?:[,.]\d+)?$" onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode==46)" matInput>
+              <mat-error *ngFor="let validacion of mensajesValidacion.Monto">
+                <mat-error class="error-message" *ngIf="frmRenoPostpagoEquipo.get('Monto')?.hasError(validacion.type) && (frmRenoPostpagoEquipo.get('Monto')?.dirty || frmRenoPostpagoEquipo.get('Monto')?.touched)">{{validacion.message}}</mat-error>
+              </mat-error>
+              <span class="form-control-feedback">
+                <i class="material-icons" *ngIf="Monto?.valid && (Monto?.dirty || Monto?.touched)">done</i>
+                <i class="material-icons" *ngIf="Monto?.invalid && (Monto?.dirty || Monto?.touched)">clear</i>
+              </span>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row" *ngIf="TipoVentaId?.value=='02'">
+          <div class="col-md-4">
+            <mat-form-field class="control-full-width" [ngClass]="{'has-danger': Cuotas?.invalid && (Cuotas?.dirty || Cuotas?.touched),
+                      'has-success': Cuotas?.valid && (Monto?.dirty || Cuotas?.touched)}">
+              <mat-label>N° CUOTAS</mat-label>
+              <input matInput formControlName="Cuotas" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" required>
+              <mat-error *ngFor="let validacion of mensajesValidacion.Cuotas">
+                <mat-error class="error-message" *ngIf="frmRenoPostpagoEquipo.get('Cuotas')?.hasError(validacion.type) && (frmRenoPostpagoEquipo.get('Cuotas')?.dirty || frmRenoPostpagoEquipo.get('Cuotas')?.touched)">{{validacion.message}}</mat-error>
+              </mat-error>
+              <span class="form-control-feedback">
+                <i class="material-icons" *ngIf="Cuotas?.valid && (Cuotas?.dirty || Cuotas?.touched)">done</i>
+                <i class="material-icons" *ngIf="Cuotas?.invalid && (Cuotas?.dirty || Cuotas?.touched)">clear</i>
+              </span>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="control-full-width" [ngClass]="{'has-danger': Inicial?.invalid && (Inicial?.dirty || Inicial?.touched),
+                      'has-success': Inicial?.valid && (Inicial?.dirty || Inicial?.touched)}">
+              <mat-label>INICIAL</mat-label>
+              <input matInput formControlName="Inicial" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" required>
+              <span class="form-control-feedback">
+                <i class="material-icons" *ngIf="Inicial?.valid && (Inicial?.dirty || Inicial?.touched)">done</i>
+                <i class="material-icons" *ngIf="Inicial?.invalid && (Inicial?.dirty || Inicial?.touched)">clear</i>
+              </span>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="control-full-width" [ngClass]="{'has-danger': MontoCuota?.invalid && (MontoCuota?.dirty || MontoCuota?.touched),
+                      'has-success': MontoCuota?.valid && (Monto?.dirty || MontoCuota?.touched)}">
+              <mat-label>MONTO CUOTA</mat-label>
+              <input matInput formControlName="MontoCuota" pattern="^\d+(?:[,.]\d+)?$" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46)" required>
+              <mat-error *ngFor="let validacion of mensajesValidacion.MontoCuota">
+                <mat-error class="error-message" *ngIf="frmRenoPostpagoEquipo.get('MontoCuota')?.hasError(validacion.type) && (frmRenoPostpagoEquipo.get('MontoCuota')?.dirty || frmRenoPostpagoEquipo.get('MontoCuota')?.touched)">{{validacion.message}}</mat-error>
+              </mat-error>
+              <span class="form-control-feedback">
+                <i class="material-icons" *ngIf="MontoCuota?.valid && (Inicial?.dirty || MontoCuota?.touched)">done</i>
+                <i class="material-icons" *ngIf="MontoCuota?.invalid && (Inicial?.dirty || MontoCuota?.touched)">clear</i>
+              </span>
+            </mat-form-field>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+  <div class="col-md-6">
+    <form [formGroup]="frmRenoPostpagoEquipoChip">
+      <div class="col-md-10" *ngIf="tipoVenta=='EC'">
+        <mat-form-field class="control-full-width"
+                        [ngClass]="{'has-danger':  ExisteICID?.invalid || ICID?.invalid && (ICID?.dirty || ICID?.touched),
+                      'has-success': ExisteICID?.valid &&  ICID?.valid && (ICID?.dirty || ICID?.touched)}">
+          <!--<mat-label>ICID</mat-label>-->
+          <input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" matInput formControlName="ICID" maxlength="10" (keyup)="ObtenerProductoPorTipoCodigo($event,3,'89511016'+frmRenoPostpagoEquipoChip.get('ICID')?.value)">
+          <span matPrefix>
+            <span [ngClass]="{'text-danger':  ExisteICID?.invalid || ICID?.invalid && (ICID?.dirty || ICID?.touched),
+                      'text-success': ExisteICID?.valid &&  ICID?.valid && (ICID?.dirty || ICID?.touched)}">ICID:&nbsp; </span> 89511016
+          </span>
+          <mat-error *ngFor="let validacion of mensajesValidacion.ICID">
+            <mat-error class="error-message" *ngIf="frmRenoPostpagoEquipoChip.get('ICID')?.hasError(validacion.type) && (frmRenoPostpagoEquipoChip.get('ICID')?.dirty || frmRenoPostpagoEquipoChip.get('ICID')?.touched)">{{validacion.message}}</mat-error>
+          </mat-error>
+          <span class="form-control-feedback" style="padding-bottom:20px">
+            <i class="material-icons" *ngIf="ExisteICID?.valid && ICID?.valid && (ICID?.dirty || ICID?.touched)">done</i>
+            <i class="material-icons" *ngIf="ExisteICID?.invalid || ICID?.invalid && (ICID?.dirty || ICID?.touched)">clear</i>
+          </span>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <button mat-fab color="warn" (click)="agregarDetalle()" class="derecha">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="material-datatables">
+      <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th class="encabezado-tabla" *ngIf="tipoVenta=='EC'">ICID</th>
+            <th class="encabezado-tabla">N° ASIGNADO</th>
+            <th class="encabezado-tabla">PLAN</th>
+            <th class="encabezado-tabla">RENTA ADELANTADA</th>
+            <th class="encabezado-tabla">IMEI</th>
+            <th class="encabezado-tabla">NOMBRE DE EQUIPO</th>
+            <th class="encabezado-tabla">TIPO</th>
+            <th class="encabezado-tabla">N° CUOTAS</th>
+            <th class="encabezado-tabla">INICIAL</th>
+            <th class="encabezado-tabla">MONTO CUOTA</th>
+            <th class="encabezado-tabla">TOTAL</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let objDetalleVenta of lstDetalleVentaPostpago; let indice = index">
+            <tr>
+              <td>{{indice+1}}</td>
+              <td *ngIf="tipoVenta=='EC'">89511016{{objDetalleVenta.ICID}}</td>
+              <td>{{objDetalleVenta.VentaNumeroCelular}}</td>
+              <td>{{objDetalleVenta.Plan}}</td>
+              <td>{{objDetalleVenta.DetalleVentaRenta}}</td>
+              <td>
+                {{objDetalleVenta.IMEI}}
+              </td>
+              <td>{{objDetalleVenta.ProductoNombre}}</td>
+              <td>{{objDetalleVenta.TipoVenta}}</td>
+              <td><span *ngIf="objDetalleVenta.TipoVentaId=='02'">{{objDetalleVenta.DetalleVentaNroCuotas}} </span></td>
+              <td><span *ngIf="objDetalleVenta.TipoVentaId=='02'">{{objDetalleVenta.DetalleVentaInicial}}   </span></td>
+              <td><span *ngIf="objDetalleVenta.TipoVentaId=='02'">{{objDetalleVenta.DetalleVentaMontoCuota}}</span></td>
+              <td>{{objDetalleVenta.DetalleVentaMontoTotal}}</td>
+              <td class="celda-derecha">
+                <button class="btn btn-link color-secondary" title="Eliminar" matTooltip="Eliminar" (click)="quitarDetalle(objDetalleVenta)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-container *ngIf="lstDetalleVentaPostpago.length==0">
+            <tr>
+              <td colspan="10" class="text-danger text-center">
+                NO SE AGREGARON DETALLES
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="10">
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,24 @@
+.encabezado-tabla {
+  text-align: center;
+  font-weight: bold;
+}
+
+.encabezado-tabla.index {
+  text-align: left;
+  width: 5%;
+}
+
+.encabezado-tabla.codigo {
+  text-align: left;
+  width: 10%;
+}
+
+.encabezado-tabla.descripcion {
+  width: 50%;
+}
+.encabezado-tabla.estado {
+  width: 5%;
+}
+.encabezado-tabla.acciones {
+  width: 20%;
+}
