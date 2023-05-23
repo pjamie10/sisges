@@ -1,0 +1,172 @@
+
+@media (min-width: 992px){
+    .typo-line{
+        padding-left: 140px;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .typo-line .category{
+        transform: translateY(-50%);
+        top: 50%;
+        left: 0px;
+        position: absolute;
+    }
+}
+.sebm-google-map-container {
+  height: 300px;
+}
+#map{
+    position:relative;
+    width:100%;
+    height: calc(100% - 60px);
+    margin-top: 70px;
+}
+
+.places-buttons .btn{
+    margin-bottom: 30px
+}
+
+.space-70{
+    height: 70px;
+    display: block;
+}
+
+.tim-row{
+    margin-bottom: 20px;
+}
+
+.tim-typo{
+    padding-left: 25%;
+    margin-bottom: 40px;
+    position: relative;
+}
+.tim-typo .tim-note{
+    bottom: 10px;
+    color: #c0c1c2;
+    display: block;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 13px;
+    left: 0;
+    margin-left: 20px;
+    position: absolute;
+    width: 260px;
+}
+.tim-row{
+    padding-top: 50px;
+}
+.tim-row h3{
+    margin-top: 0;
+}
+@media (min-width: 992px){
+
+    .typo-line{
+        padding-left: 140px;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .typo-line .category{
+        transform: translateY(-50%);
+        top: 50%;
+        left: 0px;
+        position: absolute;
+    }
+}
+
+.logo_claro {
+  margin: auto;
+  background-image: url('../img/logo.png  ');
+  background-size: cover;
+  background-position: center center;
+  resize: both;
+  width: 110px;
+  height: 106px;
+  padding-right: 6px;
+}
+
+.centrar-div {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.color-primary{
+    color:blue !important;
+}
+
+.color-secondary{
+  color: red !important;
+}
+.derecha{
+    float:right !important;
+}
+.celda-derecha {
+  text-align: right !important;
+}
+
+.bootstrap-select.btn-group.dropdown-menu-right,
+.bootstrap-select.btn-group[class*="col-"].dropdown-menu-right,
+.row .bootstrap-select.btn-group[class*="col-"].dropdown-menu-right {
+  float: right;
+}
+
+.control-full-width {
+  width: 100% !important;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.mat-dialog-container {
+  padding: 0 !important;
+}
+
+.mat-dialog-actions {
+  display: block;
+  margin-top: 0em;
+  min-height: 68px;
+  border-top: solid 1px rgba(0, 0, 0, 0.12);
+  justify-content: flex-end;
+  padding-top: 1.5rem !important;
+  padding-right: 1.4rem !important;
+  margin: 0 !important;
+}
+
+.mat-dialog-title {
+  padding-top: 20px;
+}
+
+.mat-mini-fab {
+  margin: 5px !important;
+}
+
+.etiquetas{
+    font-size:medium;
+    font-weight:bold;
+}
+.icono-centrado {
+  font-size: 40px;
+  line-height: 111px;
+  width:auto !important;
+}
+
+.icono-validacion {
+    vertical-align:middle;
+}
+.linea-vertical {
+  width: 1px;
+  /*background-color: silver;*/
+  height: 100%;
+  float: left;
+  border-left: 2px inset silver;
+  border-radius: 2px;
+}
+/*#region Tablas */
+.encabezado-tabla {
+  text-align: left;
+  font-weight: bold;
+}
+
+/*#endregion */
